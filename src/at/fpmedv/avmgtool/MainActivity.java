@@ -28,7 +28,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO
-		VmgItem item = (VmgItem) adapter.getItem(position);
+		//VmgItem item = (VmgItem) adapter.getItem(position);
 		/**
 		 	Intent viewIntent = new Intent(getApplicationContext(), VmgItemActivity.class);
 			viewIntent.putExtra("vmgitem", item);
