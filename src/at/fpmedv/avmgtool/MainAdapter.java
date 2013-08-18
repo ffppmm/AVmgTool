@@ -1,29 +1,20 @@
 package at.fpmedv.avmgtool;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.codec.DecoderException;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainAdapter extends BaseAdapter {
 	
-	private List<VmgItem> items= new ArrayList<VmgItem>();
-	private static final String LOGTAG = MainAdapter.class.getSimpleName();
+	private static final String TAG = MainAdapter.class.getSimpleName();
 	private final LayoutInflater inflator;
 	private File vmgFileDirecory;
 	private File[] vmgFiles = null;
@@ -31,13 +22,13 @@ public class MainAdapter extends BaseAdapter {
 	public MainAdapter(Context context) {
 		super();
 		inflator = LayoutInflater.from(context);
-		// read SD Dir else Toast
+		// read SD Dir
 		vmgFileDirecory = new File (Environment.getExternalStorageDirectory().getAbsolutePath() + "/avmgtool");
 		// read Files
 		if (isSDPresent()) {
 			vmgFiles = vmgFileDirecory.listFiles();
 		}
-		Toast.makeText(context, "Nr of Files: " + vmgFiles.length, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Nr. of Files found: " + vmgFiles.length, Toast.LENGTH_LONG).show();
 	}
 	
 	@Override
@@ -62,23 +53,24 @@ public class MainAdapter extends BaseAdapter {
 		ViewHolder holder;
 		
 		if (convertView == null) {
-			convertView = inflator.inflate(R.layout.vmg_item_text_text, parent, false);
+			convertView = inflator.inflate(R.layout.vmg_item_icon_text_text, parent, false);
 			holder = new ViewHolder();
 			holder.title = (TextView) convertView.findViewById(R.id.titletext);
 			holder.summary = (TextView) convertView.findViewById(R.id.summarytext);
+			holder.icon = (ImageView) convertView.findViewById(R.id.icon);			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Log.d(LOGTAG, "vmgFiles: " + vmgFiles);
 
 		if (vmgFiles != null) {
 			File item = vmgFiles[position];
-			Log.d(LOGTAG, "item: " + item);
 			if (item != null) {
 				VmgItem vmgItem = VmgItem.parse(item);
 				holder.title.setText(vmgItem.tel + " (" + vmgItem.box + ")");
 				holder.summary.setText(vmgItem.body);
+				int IconId = vmgItem.box.equals(VmgItem.INBOX_NAME) ? R.drawable.mail_inbox : R.drawable.mail_sent;
+				holder.icon.setImageResource(IconId);
 			} else {
 				return null;
 			}
@@ -94,5 +86,6 @@ public class MainAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		TextView title, summary;
+		ImageView icon;
 	}
 }
