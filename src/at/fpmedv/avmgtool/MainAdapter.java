@@ -76,7 +76,10 @@ public class MainAdapter extends BaseAdapter {
 			File item = vmgFiles[position];
 			Log.d(LOGTAG, "item: " + item);
 			if (item != null) {
-				String vmgFileContents = "";
+				VmgItem vmgItem = VmgItem.parse(item);
+				holder.title.setText(vmgItem.tel + " (" + vmgItem.box + ")");
+				holder.summary.setText(vmgItem.body);
+				/**				String vmgFileContents = "";
 				if (isSDPresent()) {
 					try {
 						vmgFileContents = readFile(item.getAbsolutePath());
@@ -85,21 +88,7 @@ public class MainAdapter extends BaseAdapter {
 						e.printStackTrace();
 					}
 				}
-				String[] lines = vmgFileContents.split(System.getProperty("line.separator"));
-				for ( int i = 0; i  < lines.length; i++) {
-					String decodedString = "";
-					if (lines[i].startsWith("N;")) {
-						String[] contents = lines[i].split(":", 2);
-						try {
-							decodedString = new String(org.apache.commons.codec.net.QuotedPrintableCodec.decodeQuotedPrintable(contents[1].getBytes()), "UTF-8");
-						} catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (DecoderException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						holder.title.setText(decodedString);
+				holder.title.setText(decodedString);
 					}
 					if (lines[i].startsWith("TEXT;")) {
 						String[] contents = lines[i].split(":", 2);
@@ -116,6 +105,7 @@ public class MainAdapter extends BaseAdapter {
 					}
 				}
 	//			holder.icon.setImageResource(item.getIcon());
+				**/
 			} else {
 				return null;
 			}
@@ -128,20 +118,7 @@ public class MainAdapter extends BaseAdapter {
 	private boolean isSDPresent() {
 		return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 	}
-	private String readFile( String file ) throws IOException {
-	    BufferedReader reader = new BufferedReader( new FileReader (file));
-	    String         line = null;
-	    StringBuilder  stringBuilder = new StringBuilder();
-	    String         ls = System.getProperty("line.separator");
 
-	    while( ( line = reader.readLine() ) != null ) {
-	        stringBuilder.append( line );
-	        stringBuilder.append( ls );
-	    }
-
-	    reader.close();
-	    return stringBuilder.toString();
-	}
 	static class ViewHolder {
 		TextView title, summary;
 	}
